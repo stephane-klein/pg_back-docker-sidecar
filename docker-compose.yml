@@ -1,0 +1,84 @@
+services:
+  postgres1:
+    image: postgres:17
+    restart: unless-stopped
+    ports:
+      - 5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres1:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pg_isready -U $$POSTGRES_USER -h $$(hostname -i)"]
+      interval: 10s
+      start_period: 30s
+
+  postgres2:
+    image: postgres:17
+    restart: no
+    ports:
+      - 5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres2:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pg_isready -U $$POSTGRES_USER -h $$(hostname -i)"]
+      interval: 10s
+      start_period: 30s
+
+  minio:
+    image: minio/minio:RELEASE.2024-06-06T09-36-42Z
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: password
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  pg_back:
+    build: .
+    image: stephaneklein/pg_back:wip
+    restart: no
+    environment:
+      POSTGRES_HOST: postgres1
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_DBNAME: postgres
+      POSTGRES_PASSWORD: password
+      
+      UPLOAD: "s3"
+      S3_KEY_ID: admin
+      S3_SECRET: password
+      S3_ENDPOINT: "http://minio:9000/"
+      S3_REGION: "us-east-1"
+      S3_BUCKET: "pg-back"
+      S3_FORCE_PATH: "true"
+      S3_TLS: "false"
+    depends_on:
+      postgres1:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+volumes:
+  postgres1:
+     name: ${COMPOSE_PROJECT_NAME}_postgres1
+  postgres2:
+     name: ${COMPOSE_PROJECT_NAME}_postgres2
+  minio:
+     name: ${COMPOSE_PROJECT_NAME}_minio
+

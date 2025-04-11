@@ -1,0 +1,6 @@
+[tools]
+go = "1.24.2"
+"go:github.com/orgrim/pg_back" = "latest"
+
+[env]
+_.source = { value = "./.envrc", tools = true }

@@ -1,0 +1,216 @@
+# pg_back configuration file
+# Reference: https://github.com/orgrim/pg_back/blob/04efb95fda74c8efc4818f86e2da8b5ac877a962/pg_back.conf
+
+# PostgreSQL binaries path. Leave empty to search $PATH
+bin_directory =
+
+# Where to store the dumps and other files. It can include the
+# {dbname} keyword that will be replaced by the name of the database
+# being dumped.
+backup_directory = /var/backups/postgresql
+
+# Timestamp format to use in filenames of output files. Two values are
+# possible: legacy and rfc3339. For example legacy is 2006-01-02_15-04-05, and
+# rfc3339 is 2006-01-02T15:04:05-07:00. rfc3339 is the default, except on
+# Windows where it is not possible to use the rfs3339 format in filename. Thus
+# the only format on Windows is legacy: the option has no effect on Windows.
+# timestamp_format = rfc3339
+
+# PostgreSQL connection options. This are the usual libpq
+# variables. dbname is the database used to dump globals, acl,
+# configuration and pause replication. password is better set in
+# ~/.pgpass
+# Default values are set in Dockerfile
+host = {{ getenv "POSTGRES_HOST" }}
+port = {{ getenv "POSTGRES_PORT" }}
+user = {{ getenv "POSTGRES_USER" }}
+dbname = {{ getenv "POSTGRES_DBNAME" }}
+
+# Weither to dump role passwords when running pg_dump
+dump_role_passwords = {{ getenv "DUMP_ROLE_PASSWORDS" "true" }}
+
+# List of database names to dump. When left empty, dump all
+# databases. See with_templates to dump templates too. Separator is
+# comma.
+include_dbs = {{ getenv "INCLUDE_DBS" "" }}
+
+# List of database names not to dump. Separator is comma.
+exclude_dbs = {{ getenv "EXCLUDE_DBS" "" }}
+
+# When set to true, database templates are also dumped, either
+# explicitly if listed in the include_dbs list or implicitly if
+# include_dbs is empty.
+with_templates = {{ getenv "WITH_TEMPLATES" "" }}
+
+# Dump only databases, excluding configuration and globals
+dump_only = {{ getenv "DUMP_ONLY" "false" }}
+
+# Format of the dump, understood by pg_dump. Possible values are
+# plain, custom, tar or directory.
+format = {{ getenv "PG_DUMP_FORMAT" "custom" }}
+
+# When the format is directory, number of parallel jobs to dumps (-j
+# option of pg_dump).
+parallel_backup_jobs = {{ getenv "PG_DUMP_PARALLEL_BACKUP_JOBS" "1" }}
+
+# When using a compressed binary format, e.g. custom or directory, adjust the
+# compression level between 0 and 9. Use -1 to keep the default level of pg_dump.
+compress_level = {{ getenv "PG_DUMP_COMPRESS_LEVEL" "-1" }}
+
+# Compute a checksum for each file in the dumps. It can be checked
+# by the corresponding shaXsum -c command. Possible values are: none to
+# disable checksums, sha1, sha224, sha256, sha384, and sha512.
+checksum_algorithm = {{ getenv "CHECKSUM_ALGORITHM" "none" }}
+
+# Encrypt the files produced, including globals and configuration.
+encrypt = {{ getenv "ENCRYPT" "false" }}
+
+# Passphrase to use for encryption and decryption. The PGBK_CIPHER_PASS
+# environment variable can be used alternatively.
+cipher_pass = {{ getenv "CIPHER_PASS" "" }}
+
+# AGE public key for encryption; in Bech32 encoding starting with 'age1'
+cipher_public_key = {{ getenv "AGE_CIPHER_PUBLIC_KEY" "" }}
+
+# AGE private key for decryption; in Bech32 encoding starting with 'AGE-SECRET-KEY-1'
+cipher_private_key = {{ getenv "AGE_CIPHER_PRIVATE_KEY" "" }}
+
+# Keep original files after encrypting them.
+encrypt_keep_source = {{ getenv "ENCRYPT_KEEP_SOURCE" "false" }}
+
+# Purge dumps older than this number of days. If the interval has to
+# be shorter than one day, use a duration with units, h for hours, m
+# for minutes, s for seconds, us for microseconds or ns for
+# nanoseconds, e.g. 1h30m24s.
+purge_older_than = {{ getenv "PURGE_OLDER_THAN" "30" }}
+
+# When purging older dumps, always keep this minimum number of
+# dumps. The default is 0. Even if purge_older_than is 0 the dumps of
+# the current run are kept. To remove all dumps and not
+# keep anything, for example to just test for data corruption, then
+# purge_older_than shall be a negative duration.
+purge_min_keep = {{ getenv "PURGE_MIN_KEEP" "0" }}
+
+# Number of pg_dump commands to run concurrently.
+jobs = {{ getenv "JOBS" "1" }}
+
+# inject these options to pg_dump
+pg_dump_options ={{ getenv "PG_DUMP_OPTIONS" "" }}
+
+# When dumping from a hot standby server, wait for exclusive locks to
+# be released within this number of seconds. Abort if exclusive locks
+# are still held. If a exclusive lock is granted and replication is
+# paused, the lock is held until the replication is resumed, causing
+# pg_dump to wait forever.
+pause_timeout = {{ getenv "PAUSE_TIMEOUT" "3600" }}
+
+# Commands to execute before and after dumping. The post-backup
+# command is always executed even in case of failure.
+pre_backup_hook =
+post_backup_hook =
+
+# Upload resulting files to a remote location. Possible values are: none,
+# s3, sftp, gcs. The default is none, meaning no file will be uploaded.
+upload = {{ getenv "UPLOAD" "none" }}
+
+# Purge remote files. When uploading to a remote location, purge the remote
+# files with the same rules as the local directory.
+purge_remote = {{ getenv "PURGE_REMOTE" "false" }}
+
+# AWS S3 Access information. Region and Bucket are mandatory. If no credential
+# or profile is provided, defaults from aws sdk are used.
+s3_region ={{ getenv "S3_REGION" "" }}
+s3_bucket ={{ getenv "S3_BUCKET" "" }}
+{{ if (getenv "S3_PROFILE" ) }}
+s3_profile ={{ getenv "S3_PROFILE" "" }}
+{{ end }}
+s3_key_id ={{ getenv "S3_KEY_ID" "" }}
+s3_secret ={{ getenv "S3_SECRET" "" }}
+s3_endpoint ={{ getenv "S3_ENDPOINT" "" }}
+s3_force_path = {{ getenv "S3_FORCE_PATH" "false" }}
+s3_tls = {{ getenv "S3_TLS" "true" }}
+
+# SFTP Access information. If the user is empty, the current system user is
+# used. Port defaults to 22. The password is also used as passphrase for any
+# identity file given, it can be provided with the PGBK_SSH_PASS environment
+# variable. PGBK_SSH_PASS is overridden by a value set here or on the command
+# line. Use the directory to inform where to store files, it can be relative to
+# the working directory of the SSH connection, the home directory of the remote
+# user in most cases.
+# sftp_host ={{ getenv "" "" }}
+# sftp_port ={{ getenv "" "" }}
+# sftp_user ={{ getenv "" "" }}
+# sftp_password ={{ getenv "" "" }}
+# sftp_directory ={{ getenv "" "" }}
+# sftp_identity ={{ getenv "" "" }}
+# sftp_ignore_hostkey = false{{ getenv "" "" }}
+
+# Google Cloud Storage (GCS) Access information. Bucket is mandatory. If the
+# path to the key file is empty, the GOOGLE_APPLICATION_CREDENTIALS environment
+# variable is used.
+# gcs_bucket ={{ getenv "" "" }}
+# gcs_endpoint ={{ getenv "" "" }}
+# gcs_keyfile ={{ getenv "" "" }}
+
+# Azure Blob Storage access information. The container is mandatory. If the
+# account name is left empty, an anonymous connection is used and the endpoint
+# is used directly: this allows the use of a full URL to the container with a
+# SAS token. When an account is provided, the URL is built by prepending the
+# container name to the endpoint. The default endpoint is
+# blob.core.windows.net. The AZURE_STORAGE_ACCOUNT and AZURE_STORAGE_KEY are
+# used when azure_account and azure_key are not set.
+# azure_container ={{ getenv "" "" }}
+# azure_endpoint ={{ getenv "" "" }}
+# azure_account ={{ getenv "" "" }}
+# azure_key ={{ getenv "" "" }}
+
+
+# Backblaze B2 Access information. Region, Endpoint, Bucket, Key-ID and App-Key are mandatory.
+# b2_bucket ={{ getenv "" "" }}
+# b2_key_id ={{ getenv "" "" }}
+# b2_app_key ={{ getenv "" "" }}
+# b2_force_path = false{{ getenv "" "" }}
+# b2_concurrent_connections = 5{{ getenv "" "" }}
+
+
+# # Per database options. Use a ini section named the same as the
+# # database. These options take precedence over the global values.
+# [dbname]
+# user =
+# format =
+# parallel_backup_jobs =
+# compress_level =
+# checksum_algorithm =
+# purge_older_than =
+# purge_min_keep =
+
+# # List of schemas and tables to dump or exlude from the dump.
+# # Inclusion and exclusion rules of pg_dump apply, as well as
+# # pattern rules. Separate schema/table names with a comma.
+{{ if (getenv "SCHEMAS") }}
+schemas = {{ getenv "SCHEMAS" }}
+{{ end }}
+
+{{ if (getenv "EXCLUDE_SCHEMAS") }}
+exclude_schemas ={{ getenv "EXCLUDE_SCHEMAS" }}
+{{ end }}
+
+{{ if (getenv "TABLES") }}
+tables ={{ getenv "TABLES" }}
+{{ end }}
+{{ if (getenv "EXCLUDE_TABLES") }}
+exclude_tables ={{ getenv "EXCLUDE_TABLES" }}
+{{ end }}
+
+
+# Include or exclude large objects in the dump. Leave the option commented to
+# keep the default behaviour, see pg_dump -b.
+{{ if (getenv "WITH_BLOBS")}}
+with_blobs = {{ getenv "WITH_BLOBS" }}
+{{ end }}
+
+# # inject these options to pg_dump. Use an empty value to override the
+# # global value of pg_dump_options.
+{{ if (getenv "PG_DUMP_OPTIONS")}}
+pg_dump_options ={{ getenv "PG_DUMP_OPTIONS" }}
+{{ end }}

@@ -131,7 +131,7 @@ sleep 45s
 cat << 'EOF'
 ```
 
-In the output above, I notice that `pg_back` has deleted the old local archive but the archive uploaded to S3 has not been deleted, I think this is a bug:
+I check that the first archive has been deleted:
 
 ```sh
 $ ./scripts/execute-pg_back-list-remote.sh

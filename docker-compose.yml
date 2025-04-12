@@ -70,7 +70,7 @@ services:
       S3_TLS: "false"
 
       PURGE_OLDER_THAN: "60s"
-      PURGE_REMOTE: "s3"
+      PURGE_REMOTE: "true"
     depends_on:
       postgres1:
         condition: service_healthy

@@ -1,6 +1,6 @@
 [tools]
-go = "1.24.2"
-"go:github.com/orgrim/pg_back" = "latest"
+awscli="2.22.35"
+age="1.2.1"
 
 [env]
 _.source = { value = "./.envrc", tools = true }

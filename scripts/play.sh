@@ -10,6 +10,8 @@ indent() {
     "$@" 2>&1 | sed -u "s/^/$prefix/"
 }
 
+rm -f ./tmp-downloads-dump/*.age
+
 cat << 'EOF'
 I start by resetting the environment:
 
@@ -41,6 +43,7 @@ I prepare a Bucket in Minio named `pg-back`:
 ```sh
 $./scripts/create-minio-bucket.sh
 EOF
+
 ./scripts/create-minio-bucket.sh
 
 cat << 'EOF'
@@ -140,6 +143,33 @@ $ ./scripts/execute-pg_back-list-remote.sh
 EOF
 
 ./scripts/execute-pg_back-list-remote.sh
+
+LAST_ARCHIVE_DATETIME=$(./scripts/execute-pg_back-list-remote.sh | tail --lines=1 | sed -E 's/.*postgres_([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})Z.*/\1/')
+
+cat << 'EOF'
+```
+
+This is how to download the latest archive locally:
+
+```sh
+EOF
+
+cat << EOF
+./scripts/download-dump.sh ${LAST_ARCHIVE_DATETIME}
+EOF
+
+./scripts/download-dump.sh ${LAST_ARCHIVE_DATETIME}
+
+cat << 'EOF'
+```
+
+Les archives ont été download dans `./tmp-downloads-dump/`:
+
+```sh
+$ ls -lha ./tmp-downloads-dump/
+EOF
+
+ls -lha ./tmp-downloads-dump/
 
 cat << 'EOF'
 ```

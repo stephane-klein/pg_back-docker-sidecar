@@ -22,4 +22,4 @@ BEGIN
 END;
 \$\$;
 \q
-EOF"
+EOF" > /dev/null

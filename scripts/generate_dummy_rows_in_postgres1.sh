@@ -9,4 +9,4 @@ docker compose exec -T postgres1 sh -c "cat << EOF | psql -U \$POSTGRES_USER \$P
 select insert_dummy_records($ROWS_COUNT);
 select count(*) from dummy;
 \q
-EOF"
+EOF" > /dev/null

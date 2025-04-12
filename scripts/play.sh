@@ -102,6 +102,8 @@ cat << 'EOF'
 I observe something I don't like. Each backup consists of 5 files. These files are not grouped in a folder.
 I find this makes reading the list of backups difficult.
 
+I also observe that the `ENCRYPT: "true"` parameter has been taken into account, the archive files appear to be encrypted with Age.
+
 Another thing I don't like is that I notice that the archives are still present in the container,
 even after being uploaded to Object Storage:
 

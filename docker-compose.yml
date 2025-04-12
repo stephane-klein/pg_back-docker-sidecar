@@ -71,6 +71,12 @@ services:
 
       PURGE_OLDER_THAN: "60s"
       PURGE_REMOTE: "true"
+
+      # Age key created with `age-keygen`
+      ENCRYPT: "true"
+      AGE_CIPHER_PUBLIC_KEY: "age12q38nk94gwgkqu9c9f7l2dyg2fnv4u9qmnq0eahcrwu0vudenyvs52gnt9"
+      AGE_CIPHER_PRIVATE_KEY: "AGE-SECRET-KEY-13MRMM74CQ2JA000HGZ86Y4SVLYS468W0YR4KPXHG7KSX5K5YSLESRCD37L"
+
     depends_on:
       postgres1:
         condition: service_healthy

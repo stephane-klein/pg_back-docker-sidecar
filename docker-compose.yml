@@ -61,6 +61,8 @@ services:
       POSTGRES_PASSWORD: password
       
       UPLOAD: "s3"
+      UPLOAD_PREFIX: "foobar"
+
       S3_KEY_ID: admin
       S3_SECRET: password
       S3_ENDPOINT: "http://minio:9000/"

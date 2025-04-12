@@ -73,14 +73,14 @@ EOF
 cat << 'EOF'
 ```
 
-I wait a few seconds before injecting more data into `postgres1` and performing a new dump:
+I wait a few seconds (30s) before injecting more data into `postgres1` and performing a new dump:
 
 ```sh
 $ ./scripts/generate_dummy_rows_in_postgres1.sh 1000
 $ ./scripts/execute-pg_back-dump.sh
 EOF
 
-sleep 20s
+sleep 30s
 
 ./scripts/generate_dummy_rows_in_postgres1.sh 1000
 ./scripts/execute-pg_back-dump.sh
@@ -110,6 +110,34 @@ $ docker compose exec pg_back ls /var/backups/postgresql/ -1
 EOF
 
 docker compose exec pg_back ls /var/backups/postgresql/ -1
+
+cat << 'EOF'
+```
+
+I now wait 45s before injecting data and performing a new dump.
+This 45s waiting period allows me to observe if the `PURGE_OLDER_THAN: "60s"` parameter is
+correctly taken into account by `pg_back`.
+
+```sh
+$ ./scripts/generate_dummy_rows_in_postgres1.sh 1000
+$ ./scripts/execute-pg_back-dump.sh
+EOF
+
+sleep 45s
+
+./scripts/generate_dummy_rows_in_postgres1.sh 1000
+./scripts/execute-pg_back-dump.sh
+
+cat << 'EOF'
+```
+
+In the output above, I notice that `pg_back` has deleted the old local archive but the archive uploaded to S3 has not been deleted, I think this is a bug:
+
+```sh
+$ ./scripts/execute-pg_back-list-remote.sh
+EOF
+
+./scripts/execute-pg_back-list-remote.sh
 
 cat << 'EOF'
 ```

@@ -68,6 +68,9 @@ services:
       S3_BUCKET: "pg-back"
       S3_FORCE_PATH: "true"
       S3_TLS: "false"
+
+      PURGE_OLDER_THAN: "60s"
+      PURGE_REMOTE: "s3"
     depends_on:
       postgres1:
         condition: service_healthy

@@ -60,6 +60,7 @@ services:
       POSTGRES_DBNAME: postgres
       POSTGRES_PASSWORD: password
       
+      BACKUP_CRON: ${BACKUP_CRON:-0 3 * * *}
       UPLOAD: "s3"
       UPLOAD_PREFIX: "foobar"
 

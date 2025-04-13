@@ -310,3 +310,54 @@ echo "select count(*) from dummy;" | ./scripts/postgres2-sql.sh
 cat << 'EOF'
 ```
 EOF
+
+cat << 'EOF'
+
+I will now test if *cron* is working correctly.
+
+I check the number of backups already performed:
+
+```
+$ ./scripts/execute-pg_back1-list-remote.sh | grep "pg_globals"
+EOF
+
+./scripts/execute-pg_back1-list-remote.sh | grep "pg_globals"
+
+cat << 'EOF'
+```
+
+I restart `pg_back1` by scheduling a backup in 2 minutes:
+
+```sh
+$ export BACKUP_CRON=$(date -u -d "now + 2 minutes" "+%M %H * * *")
+$ docker compose down pg_back1
+EOF
+
+docker compose down pg_back1
+
+cat << 'EOF'
+$ docker compose up -d pg_back1 --wait
+EOF
+
+export BACKUP_CRON=$(date -u -d "now + 2 minutes" "+%M %H * * *")
+docker compose up -d pg_back1 --wait
+
+cat << 'EOF'
+$ sleep 3m
+```
+EOF
+
+sleep 3m
+
+cat << 'EOF'
+I check that one more backup has been performed:
+
+```
+$ ./scripts/execute-pg_back1-list-remote.sh | grep "pg_globals"
+EOF
+
+./scripts/execute-pg_back1-list-remote.sh | grep "pg_globals"
+
+cat << 'EOF'
+```
+EOF

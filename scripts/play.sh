@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+stty cols 80
 cd "$(dirname "$0")/../"
 
 # Utils function

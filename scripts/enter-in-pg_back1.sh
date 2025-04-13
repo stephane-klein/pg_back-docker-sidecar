@@ -3,4 +3,4 @@ set -e
 
 cd "$(dirname "$0")/../"
 
-docker compose exec pg_back bash
+docker compose exec pg_back1 bash

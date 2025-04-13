@@ -3,4 +3,4 @@ set -e
 
 cd "$(dirname "$0")/../"
 
-docker compose exec pg_back pg_back --list-remote s3
+docker compose exec pg_back1 pg_back --list-remote s3

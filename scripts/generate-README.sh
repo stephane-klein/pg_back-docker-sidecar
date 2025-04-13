@@ -62,10 +62,10 @@ I start the services:
 - `pg_back` a "Sidecar" Docker container that executes the [`pg_back`](https://github.com/orgrim/pg_back/) commands and runs them daily with [supercronic](https://github.com/aptible/supercronic)
 
 ```sh
-$ docker compose up -d postgres1 minio pg_back --wait
+$ docker compose up -d postgres1 minio pg_back1 --wait
 EOF
 
-docker compose up -d postgres1 minio pg_back --wait
+docker compose up -d postgres1 minio pg_back1 --wait
 
 cat << 'EOF'
 ```
@@ -99,10 +99,10 @@ cat << 'EOF'
 Now, I will execute a dump with `pg_back`:
 
 ```sh
-$ ./scripts/execute-pg_back-dump.sh
+$ ./scripts/execute-pg_back1-dump.sh
 EOF
 
-./scripts/execute-pg_back-dump.sh
+./scripts/execute-pg_back1-dump.sh
 
 
 cat << 'EOF'
@@ -112,13 +112,13 @@ I wait a few seconds (30s) before injecting more data into `postgres1` and perfo
 
 ```sh
 $ ./scripts/generate_dummy_rows_in_postgres1.sh 1000
-$ ./scripts/execute-pg_back-dump.sh
+$ ./scripts/execute-pg_back1-dump.sh
 EOF
 
 sleep 30s
 
 ./scripts/generate_dummy_rows_in_postgres1.sh 1000
-./scripts/execute-pg_back-dump.sh
+./scripts/execute-pg_back1-dump.sh
 
 cat << 'EOF'
 ```
@@ -126,10 +126,10 @@ cat << 'EOF'
 Here is the list of files uploaded to Minio Object Storage:
 
 ```sh
-$ ./scripts/execute-pg_back-list-remote.sh
+$ ./scripts/execute-pg_back1-list-remote.sh
 EOF
 
-./scripts/execute-pg_back-list-remote.sh
+./scripts/execute-pg_back1-list-remote.sh
 
 cat << 'EOF'
 ```
@@ -143,10 +143,10 @@ Another thing I don't like is that I notice that the archives are still present 
 even after being uploaded to Object Storage:
 
 ```sh
-$ docker compose exec pg_back ls /var/backups/postgresql/ -1
+$ docker compose exec pg_back1 ls /var/backups/postgresql/ -1
 EOF
 
-docker compose exec pg_back ls /var/backups/postgresql/ -1
+docker compose exec pg_back1 ls /var/backups/postgresql/ -1
 
 cat << 'EOF'
 ```
@@ -157,13 +157,13 @@ correctly taken into account by `pg_back`.
 
 ```sh
 $ ./scripts/generate_dummy_rows_in_postgres1.sh 1000
-$ ./scripts/execute-pg_back-dump.sh
+$ ./scripts/execute-pg_back1-dump.sh
 EOF
 
 sleep 45s
 
 ./scripts/generate_dummy_rows_in_postgres1.sh 1000
-./scripts/execute-pg_back-dump.sh
+./scripts/execute-pg_back1-dump.sh
 
 cat << 'EOF'
 ```
@@ -171,12 +171,12 @@ cat << 'EOF'
 I check that the first archive has been deleted:
 
 ```sh
-$ ./scripts/execute-pg_back-list-remote.sh
+$ ./scripts/execute-pg_back1-list-remote.sh
 EOF
 
-./scripts/execute-pg_back-list-remote.sh
+./scripts/execute-pg_back1-list-remote.sh
 
-LAST_ARCHIVE_DATETIME=$(./scripts/execute-pg_back-list-remote.sh | tail --lines=1 | sed -E 's/.*postgres_([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})Z.*/\1/')
+LAST_ARCHIVE_DATETIME=$(./scripts/execute-pg_back1-list-remote.sh | tail --lines=1 | sed -E 's/.*postgres_([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})Z.*/\1/')
 
 cat << 'EOF'
 ```
@@ -212,7 +212,7 @@ Decrypting `*.age` archives with Age:
 $ ./scripts/age-decrypt-downloads-dump.sh
 ```
 
-I start the `postgres2` instance where I want to restore the backups:
+I start the `postgres2` where I want to restore the backups:
 
 ```sh
 $ docker compose up -d postgres2 --wait
@@ -239,6 +239,62 @@ $ ./scripts/postgres2-import-local-dump.sh ${LAST_ARCHIVE_DATETIME}
 EOF
 
 ./scripts/postgres2-import-local-dump.sh ${LAST_ARCHIVE_DATETIME}
+
+cat << 'EOF'
+```
+
+Now I check that the `dummy` table and its data have been correctly restored in the `postgres2` instance:
+
+```sh
+$ echo "select count(*) from dummy;" | ./scripts/postgres2-sql.sh
+EOF
+
+echo "select count(*) from dummy;" | ./scripts/postgres2-sql.sh
+
+cat << 'EOF'
+```
+
+I will now use an alternative solution based on `pg_back` to restore the archives in `postgres2`.
+
+Then I start the `pg_back2` service. This service is configured with the `DISABLE_CRON: "true"` option, because I don't want
+to perform backups with this service.
+
+```sh
+$ docker compose up -d pg_back2 --wait
+EOF
+
+docker compose up -d pg_back2 --wait
+
+cat << 'EOF'
+```
+
+Before restoring data to `postgres2`, I start by emptying it by destroying and restarting the service:
+
+```sh
+$ docker compose down -v postgres2
+EOF
+
+docker compose down -v postgres2
+
+cat << 'EOF'
+$ docker compose up -d postgres2 --wait
+EOF
+
+docker compose up -d postgres2 --wait
+
+cat << 'EOF'
+```
+
+I launch the restore of the latest archive to `postgres2`:
+
+```sh
+EOF
+
+cat << EOF
+$ ./scritps/pg_back2-import-dump.sh ${LAST_ARCHIVE_DATETIME}
+EOF
+
+./scripts/pg_back2-import-dump.sh ${LAST_ARCHIVE_DATETIME}
 
 cat << 'EOF'
 ```

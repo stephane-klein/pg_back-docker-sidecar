@@ -49,7 +49,7 @@ services:
       retries: 3
       start_period: 10s
 
-  pg_back:
+  pg_back1:
     build: .
     image: stephaneklein/pg_back:wip
     restart: no
@@ -79,6 +79,42 @@ services:
       AGE_CIPHER_PUBLIC_KEY: "age12q38nk94gwgkqu9c9f7l2dyg2fnv4u9qmnq0eahcrwu0vudenyvs52gnt9"
       AGE_CIPHER_PRIVATE_KEY: "AGE-SECRET-KEY-13MRMM74CQ2JA000HGZ86Y4SVLYS468W0YR4KPXHG7KSX5K5YSLESRCD37L"
 
+    depends_on:
+      postgres1:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  pg_back2:
+    build: .
+    image: stephaneklein/pg_back:wip
+    restart: no
+    environment:
+      DISABLE_CRON: "true"
+      POSTGRES_HOST: postgres2
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_DBNAME: postgres
+      POSTGRES_PASSWORD: password
+      
+      UPLOAD: "s3"
+      UPLOAD_PREFIX: "foobar"
+
+      S3_KEY_ID: admin
+      S3_SECRET: password
+      S3_ENDPOINT: "http://minio:9000/"
+      S3_REGION: "us-east-1"
+      S3_BUCKET: "pg-back"
+      S3_FORCE_PATH: "true"
+      S3_TLS: "false"
+
+      PURGE_OLDER_THAN: "60s"
+      PURGE_REMOTE: "true"
+
+      # Age key created with `age-keygen`
+      ENCRYPT: "true"
+      AGE_CIPHER_PUBLIC_KEY: "age12q38nk94gwgkqu9c9f7l2dyg2fnv4u9qmnq0eahcrwu0vudenyvs52gnt9"
+      AGE_CIPHER_PRIVATE_KEY: "AGE-SECRET-KEY-13MRMM74CQ2JA000HGZ86Y4SVLYS468W0YR4KPXHG7KSX5K5YSLESRCD37L"
     depends_on:
       postgres1:
         condition: service_healthy

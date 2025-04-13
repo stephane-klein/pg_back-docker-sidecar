@@ -39,5 +39,6 @@ ENV POSTGRES_PASSWORD="password"
 
 # Daily
 ENV BACKUP_CRON="0 3 * * *"
+ENV DISABLE_CRON="false"
 
 ENTRYPOINT [ "/entrypoint.sh" ]

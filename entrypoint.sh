@@ -13,4 +13,9 @@ fi
 
 echo "$BACKUP_CRON /usr/local/bin/pg_back" > /main.crontab
 
-supercronic /main.crontab
+
+if [[ "${DISABLE_CRON,,}" == "true" ]] || [[ "${DISABLE_CRON,,}" == "yes" ]] || [[ "${DISABLE_CRON,,}" == "1" ]]; then
+    tail -f /dev/null
+else
+    supercronic /main.crontab
+fi

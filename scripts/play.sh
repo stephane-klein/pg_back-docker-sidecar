@@ -10,7 +10,7 @@ indent() {
     "$@" 2>&1 | sed -u "s/^/$prefix/"
 }
 
-rm -f ./tmp-downloads-dump/*.age
+git clean -Xf tmp-downloads-dump/ > /dev/null
 
 cat << 'EOF'
 I start by resetting the environment:

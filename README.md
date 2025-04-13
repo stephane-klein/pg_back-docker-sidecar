@@ -272,3 +272,13 @@ $ echo "select count(*) from dummy;" | ./scripts/postgres2-sql.sh
 (1 row)
 
 ```
+
+## Generating this README.md
+
+I use a script to dynamically generate the content of this `README.md`.
+
+```sh
+$ ./scripts/generate-README.sh
+```
+
+Then I copy the output of this script into the `README.md` file.

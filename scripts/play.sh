@@ -13,6 +13,37 @@ indent() {
 git clean -Xf tmp-downloads-dump/ > /dev/null
 
 cat << 'EOF'
+# POC pg_back
+
+In this repository I want to test the implementation of [pg_back](https://github.com/orgrim/pg_back/) deployed in a Docker container as a "sidecar" to backup a PostgreSQL database deployed via Docker.
+
+For more context, see the following note written in French: https://notes.sklein.xyz/Projet%2027/
+
+## Prerequisites
+
+- [mise](https://mise.jdx.dev/)
+- [Docker Engine](https://docs.docker.com/engine/) (tested with `24.0.6`)
+
+## Services versions
+
+- PostgreSQL 17
+- [pg_back 2.5.0](https://github.com/orgrim/pg_back/releases/tag/v2.5.0)
+
+## Environment preparation
+
+If you don't use [Mise](https://mise.jdx.dev/) or [direnv](https://direnv.net/), you need to execute the following command before running `docker compose`:
+
+```
+$ source .envrc
+```
+
+```sh
+$ mise install
+$ docker compose build
+```
+
+## Start or restart the playground test scenario
+
 I start by resetting the environment:
 
 ```sh
@@ -170,6 +201,54 @@ $ ls -lha ./tmp-downloads-dump/
 EOF
 
 ls -lha ./tmp-downloads-dump/
+
+cat << 'EOF'
+```
+
+Decrypting `*.age` archives with Age:
+
+```sh
+$ ./scripts/age-decrypt-downloads-dump.sh
+```
+
+I start the `postgres2` instance where I want to restore the backups:
+
+```sh
+$ docker compose up -d postgres2 --wait
+EOF
+
+./scripts/age-decrypt-downloads-dump.sh
+
+docker compose up -d postgres2 --wait
+
+cat << 'EOF'
+```
+EOF
+
+cat << EOF
+Import \`${LAST_ARCHIVE_DATETIME}\` local archive to \`postgres2\`:
+EOF
+
+cat << 'EOF'
+```sh
+EOF
+
+cat << EOF
+$ ./scripts/postgres2-import-local-dump.sh ${LAST_ARCHIVE_DATETIME}
+EOF
+
+./scripts/postgres2-import-local-dump.sh ${LAST_ARCHIVE_DATETIME}
+
+cat << 'EOF'
+```
+
+Now I check that the `dummy` table and its data have been correctly restored in the `postgres2` instance:
+
+```sh
+$ echo "select count(*) from dummy;" | ./scripts/postgres2-sql.sh
+EOF
+
+echo "select count(*) from dummy;" | ./scripts/postgres2-sql.sh
 
 cat << 'EOF'
 ```

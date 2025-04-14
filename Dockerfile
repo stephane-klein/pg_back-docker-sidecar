@@ -2,7 +2,7 @@
 
 ARG ALPINE_VERSION=3.21
 
-FROM alpine:$ALPINE_VERSION AS BASE
+FROM alpine:$ALPINE_VERSION AS base
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -25,8 +25,8 @@ RUN apk add --no-cache \
     gomplate \
     postgresql-client # pg_back need pg_dump, then PostgreSQL version 17.4 is installed
 
-COPY --from=BASE --chmod=0755 /tmp/supercronic /usr/local/bin/supercronic
-COPY --from=BASE --chmod=0755 /tmp/pg_back /usr/local/bin/pg_back
+COPY --from=base --chmod=0755 /tmp/supercronic /usr/local/bin/supercronic
+COPY --from=base --chmod=0755 /tmp/pg_back /usr/local/bin/pg_back
 
 COPY ./pg_back.conf.tmpl /pg_back.conf.tmpl
 COPY --chmod=0755 ./entrypoint.sh /entrypoint.sh

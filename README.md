@@ -363,3 +363,7 @@ I check that one more backup has been performed:
 $ ./scripts/execute-pg_back1-list-remote.sh | grep "pg_globals"
 foobar/pg_globals_2025-04-13T21:37:00Z.sql.age
 ```
+
+## Hacking
+
+I had to make patches on the [pg_back](https://github.com/orgrim/pg_back/) project. To develop these patches, I used a workspace that I described in [`src/`](src/).

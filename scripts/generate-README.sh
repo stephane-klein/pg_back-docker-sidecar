@@ -360,4 +360,8 @@ EOF
 
 cat << 'EOF'
 ```
+
+## Hacking
+
+I had to make patches on the [pg_back](https://github.com/orgrim/pg_back/) project. To develop these patches, I used a workspace that I described in [`src/`](src/).
 EOF

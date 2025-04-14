@@ -7,7 +7,7 @@ bin_directory =
 # Where to store the dumps and other files. It can include the
 # {dbname} keyword that will be replaced by the name of the database
 # being dumped.
-backup_directory = /var/backups/postgresql
+backup_directory = {{ getenv "BACKUP_DIRECTORY" "/var/backups/postgresql" }}
 
 # Timestamp format to use in filenames of output files. Two values are
 # possible: legacy and rfc3339. For example legacy is 2006-01-02_15-04-05, and

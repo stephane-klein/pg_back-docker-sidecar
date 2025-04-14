@@ -14,8 +14,8 @@ echo "docker compose down -v"
 indent "    " docker compose down -v
 echo ""
 
-echo "docker compose up -d postgres1 minio --wait"
-indent "    " docker compose up -d postgres1 minio --wait
+echo "docker compose up -d postgres1 postgres2 minio --wait"
+indent "    " docker compose up -d postgres1 postgres2 minio --wait
 echo ""
 
 echo "./scripts/create-minio-bucket.sh"

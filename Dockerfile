@@ -1,32 +1,33 @@
 # syntax=docker/dockerfile:1
 
-ARG ALPINE_VERSION=3.21
+FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.24.2-alpine3.21 AS build-stage
 
-FROM alpine:$ALPINE_VERSION AS base
-
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 ARG TARGETOS
 ARG TARGETARCH
 
 ARG SUPERCRONIC_VERSION=0.2.33
-ARG PG_BACK_VERSION=2.5.0
 
-RUN apk add --no-cache zip curl \
+RUN apk add --no-cache git zip curl \
     # Install supercronic
     && curl -fsSLO "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-${TARGETOS}-${TARGETARCH}" \
-        && mv "supercronic-${TARGETOS}-${TARGETARCH}" "/tmp/supercronic" \
-    # Install pg_pack
-    && wget -O "/tmp/pg_back.tar.gz" https://github.com/orgrim/pg_back/releases/download/v${PG_BACK_VERSION}/pg_back_${PG_BACK_VERSION}_linux_amd64.tar.gz \
-        && tar xfz "/tmp/pg_back.tar.gz" -C /tmp/
+    && mv "supercronic-${TARGETOS}-${TARGETARCH}" "/tmp/supercronic"
 
-FROM --platform=$BUILDPLATFORM alpine:$ALPINE_VERSION
+WORKDIR /go
+
+RUN git clone --depth 1 -b v2.5.0 https://github.com/orgrim/pg_back.git
+RUN cd pg_back && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
+
+FROM --platform=$BUILDPLATFORM alpine:3.21
 
 RUN apk add --no-cache \
     bash \
     gomplate \
     postgresql-client # pg_back need pg_dump, then PostgreSQL version 17.4 is installed
 
-COPY --from=base --chmod=0755 /tmp/supercronic /usr/local/bin/supercronic
-COPY --from=base --chmod=0755 /tmp/pg_back /usr/local/bin/pg_back
+COPY --from=build-stage --chmod=0755 /tmp/supercronic /usr/local/bin/supercronic
+COPY --from=build-stage --chmod=0755 /go/bin/pg_back /usr/local/bin/pg_back
 
 COPY ./pg_back.conf.tmpl /pg_back.conf.tmpl
 COPY --chmod=0755 ./entrypoint.sh /entrypoint.sh

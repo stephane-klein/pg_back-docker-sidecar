@@ -20,9 +20,11 @@ Initially, in this repository I wanted to test the implementation of [pg_back](h
 
 And gradually, I changed the objective of this project. Now it contains
 
-- source code to build a Docker Sidecar image named `stephaneklein/pg_back-docker-sidecar`
+- source code to build a Docker Sidecar image named [`stephaneklein/pg_back-docker-sidecar:2.5.0-delete-local-file-after-upload`](https://hub.docker.com/repository/docker/stephaneklein/pg_back-docker-sidecar/general)
 - a step-by-step tutorial that presents all aspects of using this container
 - a workspace that allows me to contribute to the upstream `pg_back` project: [`./src/`](./src/)
+
+Note: This Docker image contains a patched version of `pg_back` (https://github.com/orgrim/pg_back/pull/143)
 
 For more context, see the following note written in French: https://notes.sklein.xyz/Projet%2027/
 
@@ -145,8 +147,7 @@ I find this makes reading the list of backups difficult.
 
 I also observe that the `ENCRYPT: "true"` parameter has been taken into account, the archive files appear to be encrypted with Age.
 
-Another thing I don't like is that I notice that the archives are still present in the container,
-even after being uploaded to Object Storage:
+With the patch "[Add the --delete-local-file-after-upload to delete local file after upload](https://github.com/orgrim/pg_back/pull/143)", after uploading to Object Storage, I can verify that the archive files are not present in the container filesystem:
 
 ```sh
 $ docker compose exec pg_back1 ls /var/backups/postgresql/ -1

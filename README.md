@@ -1,6 +1,12 @@
-# POC pg_back
+# pg_back Docker Sidecar
 
-In this repository I want to test the implementation of [pg_back](https://github.com/orgrim/pg_back/) deployed in a Docker container as a "sidecar" to backup a PostgreSQL database deployed via Docker.
+Initially, in this repository I wanted to test the implementation of [pg_back](https://github.com/orgrim/pg_back/) deployed in a Docker container as a "sidecar" to backup a PostgreSQL database deployed via Docker.
+
+And gradually, I changed the objective of this project. Now it contains
+
+- source code to build a Docker Sidecar image named `stephaneklein/pg_back-docker-sidecar`
+- a step-by-step tutorial that presents all aspects of using this container
+- a workspace that allows me to contribute to the upstream `pg_back` project: [`./src/`](./src/)
 
 For more context, see the following note written in French: https://notes.sklein.xyz/Projet%2027/
 

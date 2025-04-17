@@ -16,7 +16,7 @@ RUN apk add --no-cache git zip curl \
 
 WORKDIR /go
 
-RUN git clone --depth 1 --branch sklein-remove-local-file-after-upload-to-object-storage https://github.com/stephane-klein/pg_back.git
+RUN git clone --depth 1 --branch sklein-main https://github.com/stephane-klein/pg_back.git
 RUN cd pg_back && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
 
 FROM --platform=$BUILDPLATFORM alpine:3.21

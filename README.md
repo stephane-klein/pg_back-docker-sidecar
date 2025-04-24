@@ -22,7 +22,69 @@ For more context, see the following note written in French: https://notes.sklein
 - PostgreSQL 17
 - [pg_back 2.5.0](https://github.com/orgrim/pg_back/releases/tag/v2.5.0)
 
-## Environment preparation
+## How to use pg_back Docker Sidecar in production?
+
+Here's an example of a `docker-compose.yml` for using `pg_back-docker-sidecar` in production.
+
+For more information about the role and usage of `pg_back-docker-sidecar` environment variables, you can consult the content of the [`pg_back.conf.tmpl`](https://github.com/stephane-klein/pg_back-docker-sidecar/blob/main/pg_back.conf.tmpl) file.
+
+```
+services:
+  postgres1:
+    image: postgres:17
+    restart: unless-stopped
+    ports:
+      - 5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres1:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pg_isready -U $$POSTGRES_USER -h $$(hostname -i)"]
+      interval: 10s
+      start_period: 30s
+
+  pg_back:
+    image: stephaneklein/pg_back-docker-sidecar:sklein-fork
+    restart: no
+    environment:
+      POSTGRES_HOST: postgres1
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_DBNAME: postgres
+      POSTGRES_PASSWORD: password
+      
+      BACKUP_CRON: "0 3 * * *"
+      UPLOAD: "s3"
+      UPLOAD_PREFIX: "foobar"
+
+      S3_KEY_ID: admin
+      S3_SECRET: password
+      S3_ENDPOINT: "...."
+      S3_REGION: "..."
+      S3_BUCKET: "pg-back"
+      S3_FORCE_PATH: "true"
+      S3_TLS: "false"
+
+      PURGE_OLDER_THAN: "60s"
+      PURGE_REMOTE: "true"
+
+      ENCRYPT: "true"
+      AGE_CIPHER_PUBLIC_KEY: "..."
+      AGE_CIPHER_PRIVATE_KEY: "..."
+
+    depends_on:
+      postgres1:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+```
+
+## Step by step tutorial for using pg_back Docker Sidecar
+
+### Environment preparation
 
 If you don't use [Mise](https://mise.jdx.dev/) or [direnv](https://direnv.net/), you need to execute the following command before running `docker compose`:
 
@@ -35,7 +97,7 @@ $ mise install
 $ docker compose build
 ```
 
-## Start or restart the playground test scenario
+### Start or restart the playground test scenario
 
 I start by resetting the environment:
 
@@ -356,6 +418,6 @@ $ ./scripts/execute-pg_back1-list-remote.sh | grep "pg_globals"
 foobar/pg_globals_2025-04-14T15:01:00Z.sql.age
 ```
 
-## Hacking
+### Hacking
 
 I had to make patches on the [pg_back](https://github.com/orgrim/pg_back/) project. To develop these patches, I used a workspace that I described in [`src/`](src/).

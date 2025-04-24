@@ -4,7 +4,7 @@ Initially, in this repository I wanted to test the implementation of [pg_back](h
 
 And gradually, I changed the objective of this project. Now it contains
 
-- source code to build a Docker Sidecar image named [`stephaneklein/pg_back-docker-sidecar:2.5.0-delete-local-file-after-upload`](https://hub.docker.com/repository/docker/stephaneklein/pg_back-docker-sidecar/general)
+- source code to build a Docker Sidecar image named [`stephaneklein/stephaneklein/pg_back-docker-sidecar:sklein-fork`](https://hub.docker.com/repository/docker/stephaneklein/pg_back-docker-sidecar/general)
 - a step-by-step tutorial that presents all aspects of using this container
 - a workspace that allows me to contribute to the upstream `pg_back` project: [`./src/`](./src/)
 

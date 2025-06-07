@@ -142,7 +142,7 @@ WARN[0000] Found orphan containers ([poc_pg_back_66ce9ade1421-pg_back-1]) for th
 I prepare a Bucket in Minio named `pg-back`:
 
 ```sh
-$./scripts/create-minio-bucket.sh
+$ ./scripts/create-minio-bucket.sh
 Added `myminio` successfully.
 Bucket created successfully `myminio/pg-back`.
 ```
@@ -277,7 +277,7 @@ foobar/postgres_2025-04-14T14:59:24Z.dump.age
 This is how to download the latest archive locally:
 
 ```sh
-./scripts/download-dump.sh 2025-04-14T14:59:24
+$ ./scripts/download-dump.sh 2025-04-14T14:59:24
 download: s3://pg-back/foobar/pg_globals_2025-04-14T14:59:24Z.sql.age to tmp-downloads-dump/pg_globals_2025-04-14T14:59:24Z.sql.age
 download: s3://pg-back/foobar/hba_file_2025-04-14T14:59:24Z.out.age to tmp-downloads-dump/hba_file_2025-04-14T14:59:24Z.out.age
 download: s3://pg-back/foobar/postgres_2025-04-14T14:59:24Z.dump.age to tmp-downloads-dump/postgres_2025-04-14T14:59:24Z.dump.age

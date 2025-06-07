@@ -22,9 +22,9 @@ RUN cd pg_back && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
 FROM --platform=$BUILDPLATFORM alpine:3.21
 
 RUN apk add --no-cache \
-    bash \
-    gomplate \
-    postgresql-client # pg_back need pg_dump, then PostgreSQL version 17.4 is installed
+    bash=5.2.37-r0 \
+    gomplate=4.2.0-r5 \
+    postgresql17-client=17.5-r0 # pg_back need pg_dump, then PostgreSQL version 17.5 is installed
 
 COPY --from=build-stage --chmod=0755 /tmp/supercronic /usr/local/bin/supercronic
 COPY --from=build-stage --chmod=0755 /go/bin/pg_back /usr/local/bin/pg_back

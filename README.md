@@ -25,6 +25,8 @@ Here's an example of a `docker-compose.yml` for using `pg_back-docker-sidecar` i
 
 For more information about the role and usage of `pg_back-docker-sidecar` environment variables, you can consult the content of the [`pg_back.conf.tmpl`](https://github.com/stephane-klein/pg_back-docker-sidecar/blob/main/pg_back.conf.tmpl) file.
 
+You can select the PostgreSQL version that will be used by *pg_back* by specifying the version number in the `POSTGRES_VERSION` environment variable, for example `POSTGRES_VERSION=17` (the `stephaneklein/pg_back-docker-sidecar` Docker image supports PostgreSQL versions `15`, `16`, and `17`).
+
 ```
 services:
   postgres1:
@@ -47,6 +49,7 @@ services:
     image: stephaneklein/pg_back-docker-sidecar:sklein-fork
     restart: no
     environment:
+      POSTGRES_VERSION: 17
       POSTGRES_HOST: postgres1
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres

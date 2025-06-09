@@ -19,16 +19,6 @@ Why use this branch? To benefit immediately from [several Pull Requests pending 
 
 To build this image, see the section [Build stephaneklein/pg_back:wip with custom pg_back](https://github.com/stephane-klein/pg_back-docker-sidecar/tree/main/src#build-stephanekleinpg_backwip-with-custom-pg_back)
 
-## Prerequisites
-
-- [mise](https://mise.jdx.dev/)
-- [Docker Engine](https://docs.docker.com/engine/) (tested with `24.0.6`)
-
-## Services versions
-
-- PostgreSQL 17
-- [pg_back 2.5.0](https://github.com/orgrim/pg_back/releases/tag/v2.5.0)
-
 ## How to use pg_back Docker Sidecar in production?
 
 Here's an example of a `docker-compose.yml` for using `pg_back-docker-sidecar` in production.
@@ -89,7 +79,12 @@ services:
         condition: service_healthy
 ```
 
-## Step by step tutorial for using pg_back Docker Sidecar
+## Step by step tutorial for using pg_back Docker Sidecar locally
+
+### Prerequisites
+
+- [mise](https://mise.jdx.dev/)
+- [Docker Engine](https://docs.docker.com/engine/) (tested with `24.0.6`)
 
 ### Environment preparation
 

@@ -2,7 +2,7 @@
 # Reference: https://github.com/orgrim/pg_back/blob/04efb95fda74c8efc4818f86e2da8b5ac877a962/pg_back.conf
 
 # PostgreSQL binaries path. Leave empty to search $PATH
-bin_directory =
+bin_directory = /usr/libexec/postgresql{{ getenv "POSTGRES_VERSION" "17" }}/
 
 # Where to store the dumps and other files. It can include the
 # {dbname} keyword that will be replaced by the name of the database

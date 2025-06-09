@@ -54,6 +54,7 @@ services:
     image: stephaneklein/pg_back-docker-sidecar:sklein-fork
     restart: no
     environment:
+      POSTGRES_VERSION: 17
       POSTGRES_HOST: postgres1
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres
@@ -92,6 +93,7 @@ services:
     restart: no
     environment:
       DISABLE_CRON: "true"
+      POSTGRES_VERSION: 17
       POSTGRES_HOST: postgres2
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres

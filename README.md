@@ -111,15 +111,15 @@ I start by resetting the environment:
 ```sh
 $ docker compose down -v
 [+] Running 9/9
- ✔ Container poc_pg_back_66ce9ade1421-pg_back2-1   Removed                10.2s
- ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Removed                 0.2s
- ✔ Container poc_pg_back_66ce9ade1421-pg_back1-1   Removed                10.2s
- ✔ Container poc_pg_back_66ce9ade1421-minio-1      Removed                 0.4s
- ✔ Container poc_pg_back_66ce9ade1421-postgres1-1  Removed                 0.3s
- ✔ Volume poc_pg_back_66ce9ade1421_postgres2       Removed                 0.0s
- ✔ Volume poc_pg_back_66ce9ade1421_minio           Removed                 0.1s
- ✔ Volume poc_pg_back_66ce9ade1421_postgres1       Removed                 0.1s
- ! Network poc_pg_back_66ce9ade1421_default        Resource is still in use0.0s
+ ✔ Container poc_pg_back_66ce9ade1421-pg_back2-1   Removed                 10.2s
+ ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Removed                  0.2s
+ ✔ Container poc_pg_back_66ce9ade1421-pg_back1-1   Removed                 10.2s
+ ✔ Container poc_pg_back_66ce9ade1421-minio-1      Removed                  0.4s
+ ✔ Container poc_pg_back_66ce9ade1421-postgres1-1  Removed                  0.3s
+ ✔ Volume poc_pg_back_66ce9ade1421_postgres2       Removed                  0.0s
+ ✔ Volume poc_pg_back_66ce9ade1421_minio           Removed                  0.1s
+ ✔ Volume poc_pg_back_66ce9ade1421_postgres1       Removed                  0.1s
+ ! Network poc_pg_back_66ce9ade1421_default        Resource is still in use 0.0s
 ```
 
 I start the services:
@@ -313,8 +313,8 @@ I start the `postgres2` where I want to restore the backups:
 $ docker compose up -d postgres2 --wait
 WARN[0000] Found orphan containers ([poc_pg_back_66ce9ade1421-pg_back-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.
 [+] Running 2/2
- ✔ Volume "poc_pg_back_66ce9ade1421_postgres2"     Created                                                                                                                                                                                                                                                                                              0.0s
- ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Healthy                                                                                                                                                                                                                                                                                              5.9s
+ ✔ Volume "poc_pg_back_66ce9ade1421_postgres2"     Created      0.0s
+ ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Healthy      5.9s
 ```
 Import `2025-04-14T14:59:24` local archive to `postgres2`:
 ```sh
@@ -345,9 +345,9 @@ to perform backups with this service.
 $ docker compose up -d pg_back2 --wait
 WARN[0000] Found orphan containers ([poc_pg_back_66ce9ade1421-pg_back-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.
 [+] Running 3/3
- ✔ Container poc_pg_back_66ce9ade1421-postgres1-1  Healthy                                                                                                                                                                                                                                                                                              1.4s
- ✔ Container poc_pg_back_66ce9ade1421-minio-1      Healthy                                                                                                                                                                                                                                                                                              1.4s
- ✔ Container poc_pg_back_66ce9ade1421-pg_back2-1   Healthy                                                                                                                                                                                                                                                                                              1.4s
+ ✔ Container poc_pg_back_66ce9ade1421-postgres1-1  Healthy             1.4s
+ ✔ Container poc_pg_back_66ce9ade1421-minio-1      Healthy             1.4s
+ ✔ Container poc_pg_back_66ce9ade1421-pg_back2-1   Healthy             1.4s
 ```
 
 Before restoring data to `postgres2`, I start by emptying it by destroying and restarting the service:
@@ -355,14 +355,14 @@ Before restoring data to `postgres2`, I start by emptying it by destroying and r
 ```sh
 $ docker compose down -v postgres2
 [+] Running 3/3
- ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Removed                                                                                                                                                                                                                                                                                              0.4s
- ✔ Volume poc_pg_back_66ce9ade1421_postgres2       Removed                                                                                                                                                                                                                                                                                              0.1s
- ! Network poc_pg_back_66ce9ade1421_default        Resource is still in use                                                                                                                                                                                                                                                                             0.0s
+ ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Removed                   0.4s
+ ✔ Volume poc_pg_back_66ce9ade1421_postgres2       Removed                   0.1s
+ ! Network poc_pg_back_66ce9ade1421_default        Resource is still in use  0.0s
 $ docker compose up -d postgres2 --wait
 WARN[0000] Found orphan containers ([poc_pg_back_66ce9ade1421-pg_back-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.
 [+] Running 2/2
- ✔ Volume "poc_pg_back_66ce9ade1421_postgres2"     Created                                                                                                                                                                                                                                                                                              0.0s
- ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Healthy                                                                                                                                                                                                                                                                                              6.0s
+ ✔ Volume "poc_pg_back_66ce9ade1421_postgres2"     Created                   0.0s
+ ✔ Container poc_pg_back_66ce9ade1421-postgres2-1  Healthy                   6.0s
 ```
 
 I launch the restore of the latest archive to `postgres2`:
@@ -408,14 +408,14 @@ I restart `pg_back1` by scheduling a backup in 2 minutes:
 $ export BACKUP_CRON=$(date -u -d "now + 2 minutes" "+%M %H * * *")
 $ docker compose down pg_back1
 [+] Running 2/2
- ✔ Container poc_pg_back_66ce9ade1421-pg_back1-1  Removed                                                                                                                                                                                                                                                                                              10.4s
- ! Network poc_pg_back_66ce9ade1421_default       Resource is still in use                                                                                                                                                                                                                                                                              0.0s
+ ✔ Container poc_pg_back_66ce9ade1421-pg_back1-1  Removed                   10.4s
+ ! Network poc_pg_back_66ce9ade1421_default       Resource is still in use  0.0s
 $ docker compose up -d pg_back1 --wait
 WARN[0000] Found orphan containers ([poc_pg_back_66ce9ade1421-pg_back-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.
 [+] Running 3/3
- ✔ Container poc_pg_back_66ce9ade1421-minio-1      Healthy                                                                                                                                                                                                                                                                                              1.3s
- ✔ Container poc_pg_back_66ce9ade1421-postgres1-1  Healthy                                                                                                                                                                                                                                                                                              1.3s
- ✔ Container poc_pg_back_66ce9ade1421-pg_back1-1   Healthy                                                                                                                                                                                                                                                                                              1.3s
+ ✔ Container poc_pg_back_66ce9ade1421-minio-1      Healthy                  1.3s
+ ✔ Container poc_pg_back_66ce9ade1421-postgres1-1  Healthy                  1.3s
+ ✔ Container poc_pg_back_66ce9ade1421-pg_back1-1   Healthy                  1.3s
 $ sleep 3m
 ```
 I check that one more backup has been performed:

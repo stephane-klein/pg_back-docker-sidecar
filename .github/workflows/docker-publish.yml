@@ -16,10 +16,23 @@ jobs:
           username: stephaneklein
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Generate tag
+        id: tag
+        run: |
+          DATETIME=$(date '+%Y%m%d%H%M%S')
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "docker_tag=${DATETIME}-${SHORT_SHA}-sklein-fork" >> $GITHUB_OUTPUT
+
+      # `sklein-fork` contains the code from the following branch https://github.com/stephane-klein/pg_back/commits/sklein-main/
+      # when this Pull Request will be merged https://github.com/orgrim/pg_back/pull/147
+      # `sklein-fork` will be replaced by `pg_back2.5.0`
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: stephaneklein/pg_back-docker-sidecar:latest
+          tags: |
+            stephaneklein/pg_back-docker-sidecar:latest
+            stephaneklein/pg_back-docker-sidecar:${{ steps.tag.outputs.docker_tag }}

@@ -4,7 +4,7 @@ on:
     branches: [ main ]
 
 jobs:
-  docker_build_push:
+  create-release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -43,3 +43,20 @@ jobs:
           tags: |
             stephaneklein/pg_back-docker-sidecar:latest
             stephaneklein/pg_back-docker-sidecar:${{ steps.tag.outputs.docker_tag }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.docker_tag }}
+          name: "${{ steps.tag.outputs.docker_tag }}"
+          body: |
+            Here's how to pull the Docker image for this release:
+
+            ```
+            $ docker pull docker.io/stephaneklein/pg_back-docker-sidecar:${{ steps.tag.outputs.docker_tag }}
+            ```
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -63,7 +63,7 @@ Everything worked well.
 Here is a method to build a Docker image `stephaneklein/pg_back:wip` incorporating the `./github.com/orgrim/pg_back/pg_back` binary.
 
 ```sh
-$ docker build -f ../Dockerfile.dev ../ -t stephaneklein/pg_back-docker-sidecar:sklein-fork
-$ docker run --rm -it stephaneklein/pg_back-docker-sidecar:sklein-fork --version
+$ docker build -f ../Dockerfile.dev ../ -t stephaneklein/pg_back-docker-sidecar
+$ docker run --rm -it stephaneklein/pg_back-docker-sidecar --version
 pg_back version 2.6.0
 ```

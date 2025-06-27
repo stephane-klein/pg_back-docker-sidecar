@@ -3,4 +3,4 @@ set -e
 
 cd "$(dirname "$0")/../"
 
-docker push stephaneklein/pg_back-docker-sidecar:sklein-fork
+docker push stephaneklein/pg_back-docker-sidecar:latest

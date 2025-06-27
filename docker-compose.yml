@@ -51,7 +51,7 @@ services:
 
   pg_back1:
     build: .
-    image: stephaneklein/pg_back-docker-sidecar:sklein-fork
+    image: stephaneklein/pg_back-docker-sidecar
     restart: no
     environment:
       POSTGRES_VERSION: 17
@@ -89,7 +89,7 @@ services:
 
   pg_back2:
     build: .
-    image: stephaneklein/pg_back-docker-sidecar:sklein-fork
+    image: stephaneklein/pg_back-docker-sidecar
     restart: no
     environment:
       DISABLE_CRON: "true"

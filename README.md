@@ -4,20 +4,11 @@ Initially, in this repository I wanted to test the implementation of [pg_back](h
 
 And gradually, I changed the objective of this project. Now it contains
 
-- source code to build a Docker Sidecar image named [`stephaneklein/pg_back-docker-sidecar:sklein-fork`](https://hub.docker.com/repository/docker/stephaneklein/pg_back-docker-sidecar/general)
+- source code to build a Docker Sidecar image named [`stephaneklein/pg_back-docker-sidecar`](https://hub.docker.com/repository/docker/stephaneklein/pg_back-docker-sidecar/general)
 - a step-by-step tutorial that presents all aspects of using this container
 - a workspace that allows me to contribute to the upstream `pg_back` project: [`./src/`](./src/)
 
 For more context, see the following note written in French: https://notes.sklein.xyz/Projet%2027/
-
-## What is `pg_back-docker-sidecar:sklein-fork` Docker image?
-
-The `pg_back-docker-sidecar` project uses the [`stephaneklein/pg_back-docker-sidecar:sklein-fork`](https://hub.docker.com/repository/docker/stephaneklein/pg_back-docker-sidecar/general) Docker image
-which contains a build from the [`sklein-main`](https://github.com/stephane-klein/pg_back/tree/sklein-main) branch ([check the history to see what has been integrated](https://github.com/stephane-klein/pg_back/commits/sklein-main/)).
-
-Why use this branch? To benefit immediately from [several Pull Requests pending merge](https://github.com/orgrim/pg_back/pulls).
-
-To build this image, see the section [Build stephaneklein/pg_back:wip with custom pg_back](https://github.com/stephane-klein/pg_back-docker-sidecar/tree/main/src#build-stephanekleinpg_backwip-with-custom-pg_back)
 
 ## How to use pg_back Docker Sidecar in production?
 
@@ -46,7 +37,7 @@ services:
       start_period: 30s
 
   pg_back:
-    image: stephaneklein/pg_back-docker-sidecar:sklein-fork
+    image: stephaneklein/pg_back-docker-sidecar
     restart: no
     environment:
       POSTGRES_VERSION: 17

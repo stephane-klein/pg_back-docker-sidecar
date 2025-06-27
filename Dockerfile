@@ -10,14 +10,15 @@ ARG TARGETARCH
 ARG SUPERCRONIC_VERSION=0.2.33
 
 RUN apk add --no-cache git zip curl \
-    # Install supercronic
-    && curl -fsSLO "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-${TARGETOS}-${TARGETARCH}" \
-    && mv "supercronic-${TARGETOS}-${TARGETARCH}" "/tmp/supercronic"
+# Install supercronic
+&& curl -fsSLO "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-${TARGETOS}-${TARGETARCH}" \
+&& mv "supercronic-${TARGETOS}-${TARGETARCH}" "/tmp/supercronic"
 
 WORKDIR /go
 
-RUN git clone --depth 1 --branch sklein-main https://github.com/stephane-klein/pg_back.git
-RUN cd pg_back && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
+
+RUN git clone --branch master https://github.com/orgrim/pg_back.git
+RUN cd pg_back && git checkout 5375ec26a6e8453ec843e31ed116c6b35774e3a9 && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
 
 FROM --platform=$BUILDPLATFORM alpine:3.21
 

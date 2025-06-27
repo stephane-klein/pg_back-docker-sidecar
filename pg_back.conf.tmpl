@@ -45,9 +45,9 @@ with_templates = {{ getenv "WITH_TEMPLATES" "" }}
 # Dump only databases, excluding configuration and globals
 dump_only = {{ getenv "DUMP_ONLY" "false" }}
 
-# Apply a single consistent timestamp to all filenames in a snapshot
-# instead of using individual file creation times
-uniform_snapshot_timestamp = true
+# Apply the same consistent timestamp to all filenames generated
+# by pg_back instead of using individual file creation times
+uniform_timestamp = true
 
 # Format of the dump, understood by pg_dump. Possible values are
 # plain, custom, tar or directory.

@@ -15,7 +15,7 @@ else
     export POSTGRES_PORT=$(cd .. ; docker inspect ${POSTGRES1_DOCKER_ID} | jq -r '.[].NetworkSettings.Ports["5432/tcp"][0].HostPort')
 fi
 export POSTGRES_USER="postgres"
-export POSTGRES_DBNAME="postgres"
+export POSTGRES_DB="postgres"
 export POSTGRES_PASSWORD="password"
 
 export BACKUP_DIRECTORY="$(pwd)/tmp-pg_back/postgres1/"
@@ -51,7 +51,7 @@ else
     export POSTGRES_PORT=$(cd .. ; docker inspect ${POSTGRES2_DOCKER_ID} | jq -r '.[].NetworkSettings.Ports["5432/tcp"][0].HostPort')
 fi
 export POSTGRES_USER="postgres"
-export POSTGRES_DBNAME="postgres"
+export POSTGRES_DB="postgres"
 export POSTGRES_PASSWORD="password"
 
 export BACKUP_DIRECTORY="$(pwd)/tmp-pg_back/postgres2/"

@@ -24,7 +24,7 @@ backup_directory = {{ getenv "BACKUP_DIRECTORY" "/var/backups/postgresql" }}
 host = {{ getenv "POSTGRES_HOST" }}
 port = {{ getenv "POSTGRES_PORT" }}
 user = {{ getenv "POSTGRES_USER" }}
-dbname = {{ getenv "POSTGRES_DBNAME" }}
+dbname = {{ getenv "POSTGRES_DB" (getenv "POSTGRES_DBNAME") }}
 
 # Weither to dump role passwords when running pg_dump
 dump_role_passwords = {{ getenv "DUMP_ROLE_PASSWORDS" "true" }}

@@ -44,7 +44,7 @@ services:
       POSTGRES_HOST: postgres1
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres
-      POSTGRES_DBNAME: postgres
+      POSTGRES_DB: postgres
       POSTGRES_PASSWORD: password
       
       BACKUP_CRON: "0 3 * * *"

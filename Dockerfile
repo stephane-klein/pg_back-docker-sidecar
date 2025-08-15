@@ -28,6 +28,7 @@ FROM --platform=$BUILDPLATFORM alpine:3.21
 RUN apk add --no-cache \
     bash=5.2.37-r0 \
     gomplate=4.2.0-r5 \
+    aws-cli=2.22.10-r0 \
     postgresql17-client=17.5-r0 \
     postgresql16-client=16.9-r0 \
     postgresql15-client=15.13-r0

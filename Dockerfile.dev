@@ -20,6 +20,7 @@ FROM --platform=$BUILDPLATFORM alpine:$ALPINE_VERSION
 RUN apk add --no-cache \
     bash=5.2.37-r0 \
     gomplate=4.2.0-r5 \
+    aws-cli=2.22.10-r0 \
     postgresql17-client=17.5-r0 # pg_back need pg_dump, then PostgreSQL version 17.5 is installed
 
 COPY --from=base --chmod=0755 /tmp/supercronic /usr/local/bin/supercronic

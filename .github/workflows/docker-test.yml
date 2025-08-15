@@ -19,7 +19,7 @@ jobs:
         run: |
           DATETIME=$(date '+%Y%m%d%H%M%S')
           SHORT_SHA=$(git rev-parse --short HEAD)
-          echo "docker_tag=${DATETIME}-${SHORT_SHA}-pg_back5375ec2" >> $GITHUB_OUTPUT
+          echo "docker_tag=${DATETIME}-${SHORT_SHA}-pg_backv2.6.0" >> $GITHUB_OUTPUT
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6

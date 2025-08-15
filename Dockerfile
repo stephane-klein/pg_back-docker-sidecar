@@ -18,7 +18,7 @@ WORKDIR /go
 
 
 RUN git clone --branch master https://github.com/orgrim/pg_back.git
-RUN cd pg_back && git checkout 5375ec26a6e8453ec843e31ed116c6b35774e3a9 && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
+RUN cd pg_back && git checkout v2.6.0 && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
 
 FROM --platform=$BUILDPLATFORM alpine:3.21
 

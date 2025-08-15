@@ -32,7 +32,7 @@ COPY --chmod=0755 ./entrypoint.sh /entrypoint.sh
 ENV POSTGRES_HOST="postres"
 ENV POSTGRES_PORT="5432"
 ENV POSTGRES_USER="postgres"
-ENV POSTGRES_DBNAME="postgres"
+ENV POSTGRES_DB="postgres"
 ENV POSTGRES_PASSWORD="password"
 
 # Daily

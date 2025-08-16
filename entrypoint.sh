@@ -6,6 +6,9 @@ gomplate --file /pg_back.conf.tmpl --out /etc/pg_back/pg_back.conf
 echo "${POSTGRES_HOST}:${POSTGRES_PORT}:*:${POSTGRES_USER}:${POSTGRES_PASSWORD}" > ~/.pgpass
 chmod 0600 ~/.pgpass
 
+rm -rf /usr/libexec/postgresql
+ln -sf "/usr/libexec/postgresql${POSTGRES_VERSION}" /usr/libexec/postgresql
+
 if [[ $# -ne 0 ]]; then
     exec "$@"
     exit 0

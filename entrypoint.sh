@@ -6,6 +6,10 @@ gomplate --file /pg_back.conf.tmpl --out /etc/pg_back/pg_back.conf
 echo "${POSTGRES_HOST}:${POSTGRES_PORT}:*:${POSTGRES_USER}:${POSTGRES_PASSWORD}" > ~/.pgpass
 chmod 0600 ~/.pgpass
 
+if [ ! -d "/usr/libexec/postgresql${POSTGRES_VERSION}" ]; then
+    echo "Error: PostgreSQL ${POSTGRES_VERSION} is not installed or not found in /usr/libexec/"
+    exit 1
+fi
 rm -rf /usr/libexec/postgresql
 ln -sf "/usr/libexec/postgresql${POSTGRES_VERSION}" /usr/libexec/postgresql
 

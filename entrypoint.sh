@@ -3,7 +3,7 @@ set -euo pipefail
 
 gomplate --file /pg_back.conf.tmpl --out /etc/pg_back/pg_back.conf
 
-if [[ ! -f /run/secrets/${POSTGRES_PASSWORD_FILE} ]]; then
+if [[ -f /run/secrets/${POSTGRES_PASSWORD_FILE} ]]; then
     POSTGRES_PASSWORD=$(< ${POSTGRES_PASSWORD_FILE})
 fi
 if [[ -z ${POSTGRES_PASSWORD} ]]; then

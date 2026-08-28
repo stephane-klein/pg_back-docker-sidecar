@@ -28,7 +28,9 @@ services:
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
+    secrets:
+      - POSTGRES_PASSWORD
     volumes:
       - postgres1:/var/lib/postgresql/data/
     healthcheck:
@@ -45,7 +47,7 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD
       
       BACKUP_CRON: "0 3 * * *"
       UPLOAD: "s3"
@@ -65,12 +67,17 @@ services:
       ENCRYPT: "true"
       AGE_CIPHER_PUBLIC_KEY: "..."
       AGE_CIPHER_PRIVATE_KEY: "..."
-
+    secrets:
+      - POSTGRES_PASSWORD
     depends_on:
       postgres1:
         condition: service_healthy
       minio:
         condition: service_healthy
+
+secrets:
+  POSTGRES_PASSWORD:
+    environment: POSTGRES_PASSWORD
 ```
 
 ## Step by step tutorial for using pg_back Docker Sidecar locally

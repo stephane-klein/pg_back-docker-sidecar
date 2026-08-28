@@ -3,6 +3,14 @@ set -euo pipefail
 
 gomplate --file /pg_back.conf.tmpl --out /etc/pg_back/pg_back.conf
 
+if [[ ! -f /run/secrets/${POSTGRES_PASSWORD_FILE} ]]; then
+    POSTGRES_PASSWORD=$(< ${POSTGRES_PASSWORD_FILE})
+fi
+if [[ -z ${POSTGRES_PASSWORD} ]]; then
+    echo "No postgres password given; aborting"
+    exit 1
+fi
+
 echo "${POSTGRES_HOST}:${POSTGRES_PORT}:*:${POSTGRES_USER}:${POSTGRES_PASSWORD}" > ~/.pgpass
 chmod 0600 ~/.pgpass
 

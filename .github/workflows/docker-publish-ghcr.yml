@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'postgres18-support']
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:

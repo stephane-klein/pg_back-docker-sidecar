@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '34 3 * * *'
   push:
-    branches: [ "main", "postgres18-support" ]
+    branches: [ "main" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:

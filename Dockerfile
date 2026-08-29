@@ -20,18 +20,18 @@ WORKDIR /go
 RUN git clone --branch master https://github.com/orgrim/pg_back.git
 RUN cd pg_back && git checkout v2.6.0 && CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/pg_back
 
-FROM --platform=$BUILDPLATFORM alpine:3.21
+FROM --platform=$BUILDPLATFORM alpine:3.24
 
 # pg_back need pg_dump, then PostgreSQL client packages are installed
 # Multiple PostgreSQL versions are provided because for example a backup
 # made with Postgres17 cannot be restored on an instance running version 16
 RUN apk add --no-cache \
-    bash=5.2.37-r0 \
-    gomplate=4.2.0-r5 \
-    aws-cli=2.22.10-r0 \
-    postgresql17-client=17.5-r0 \
-    postgresql16-client=16.9-r0 \
-    postgresql15-client=15.13-r0
+    bash=5.3.9-r1 \
+    gomplate=5.1.0-r1 \
+    aws-cli=2.34.63-r0 \
+    postgresql18-client=18.6-r0 \
+    postgresql17-client=17.11-r0 \
+    postgresql16-client=16.15-r0
 
 COPY --from=build-stage --chmod=0755 /tmp/supercronic /usr/local/bin/supercronic
 COPY --from=build-stage --chmod=0755 /go/bin/pg_back /usr/local/bin/pg_back
@@ -39,12 +39,12 @@ COPY --from=build-stage --chmod=0755 /go/bin/pg_back /usr/local/bin/pg_back
 COPY ./pg_back.conf.tmpl /pg_back.conf.tmpl
 COPY --chmod=0755 ./entrypoint.sh /entrypoint.sh
 
-ENV POSTGRES_VERSION=17
+ENV POSTGRES_VERSION=18
 ENV POSTGRES_HOST="postres"
 ENV POSTGRES_PORT="5432"
 ENV POSTGRES_USER="postgres"
 ENV POSTGRES_DB="postgres"
-ENV POSTGRES_PASSWORD="password"
+ENV POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
 
 # Daily
 ENV BACKUP_CRON="0 3 * * *"
